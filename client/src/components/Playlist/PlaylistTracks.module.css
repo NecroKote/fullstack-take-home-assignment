@@ -1,0 +1,11 @@
+.playlistTracks {
+
+}
+
+.playlistTracks .trackNumber {
+  display: block;
+}
+
+.playlistTracks .playButton {
+  margin: 0 1em;
+}

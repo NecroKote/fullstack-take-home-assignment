@@ -1,43 +1,53 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styles from "./App.module.css";
-import logo from "./assets/logo.svg";
 
-import TrackRow from "./components/TrackRow";
-import AudioPlayer from "./components/AudioPlayer";
+import useTabs from "./hooks/useTabs";
+import { TracksContextProvider } from "./context/TracksContext";
+import { PlaylistsContextProvider } from "./context/PlaylistsContext";
+import { PlayerContextProvider } from "./context/PlayerContext"
+import { ToastContextProvider } from "./context/ToastContext"
+
+import { TracksTab } from "./components/TracksTab";
+import { PlaylistsTab } from "./components/PlaylistsTab";
+import { NowPlaying } from "./components/Player";
+import { NavigationStrip } from "./components/NavigationStrip";
+import { PlaylistSelectModalContextProvider } from "./context/PlaylistSelectModalContext";
+import { Toast } from "./components/Modal";
+
+const TAB_TRACKS = 0;
+const TAB_PLAYLISTS = 1;
+
+const tabs = {
+  [TAB_TRACKS]: "Tracks",
+  [TAB_PLAYLISTS]: "Playlists",
+};
 
 function App() {
-  const [tracks, setTracks] = useState([]);
-  const [currentTrack, setCurrentTrack] = useState();
-
-  useEffect(() => {
-    fetch("http://0.0.0.0:8000/tracks/", { mode: "cors" })
-      .then((res) => res.json())
-      .then((data) => setTracks(data));
-  }, []);
-
-  const handlePlay = (track) => setCurrentTrack(track);
+  const { activeTab, currentIndex, changeTab } = useTabs({
+    [TAB_TRACKS]: <TracksTab />,
+    [TAB_PLAYLISTS]: <PlaylistsTab />,
+  }, TAB_TRACKS);
 
   return (
     <>
-      <main className={styles.app}>
-        <nav>
-          <img src={logo} className={styles.logo} alt="Logo" />
-          <ul className={styles.menu}>
-            <li>
-              <a href="#" className={styles.active}>
-                Tracks
-              </a>
-            </li>
-            <li>
-              <a href="#">Playlists</a>
-            </li>
-          </ul>
-        </nav>
-        {tracks.map((track, ix) => (
-          <TrackRow key={ix} track={track} handlePlay={handlePlay} />
-        ))}
-      </main>
-      {currentTrack && <AudioPlayer track={currentTrack} />}
+      <ToastContextProvider>
+        <PlayerContextProvider>
+          <main className={styles.app}>
+            <NavigationStrip tabs={tabs} currentIndex={currentIndex} changeTab={changeTab} />
+            <TracksContextProvider>
+              <PlaylistsContextProvider>
+                <PlaylistSelectModalContextProvider>
+                  {activeTab}
+                </PlaylistSelectModalContextProvider>
+              </PlaylistsContextProvider>
+            </TracksContextProvider>
+          </main>
+          <div className={styles.sticky}>
+            <Toast />
+            <NowPlaying />
+          </div>
+        </PlayerContextProvider>
+      </ToastContextProvider>
     </>
   );
 }

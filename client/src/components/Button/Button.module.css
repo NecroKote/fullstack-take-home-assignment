@@ -1,0 +1,38 @@
+.button {
+  cursor: pointer;
+  border: unset;
+  border-radius: 1.5rem;
+  padding: 0.8rem;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+}
+
+.button.positive:not(:disabled) {
+  background-color: #7cd271;
+  color: white;
+}
+
+.button.positive:not(:disabled):hover {
+  background-color: #5dbb4d;
+}
+
+.button.positive:not(:disabled):active {
+  background-color: #4daa3f;
+}
+
+.button.negative:not(:disabled) {
+  background-color: #ea2a3b;
+  color: white;
+}
+
+.button.negative:not(:disabled):hover {
+  background-color: #c41e2f;
+}
+
+.button.negative:not(:disabled):active {
+  background-color: #a31a2a;
+}

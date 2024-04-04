@@ -1,0 +1,10 @@
+.playPauseButton {
+  cursor: pointer;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: unset;
+  border: unset;
+  padding: unset;
+}

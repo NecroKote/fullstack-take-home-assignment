@@ -1,0 +1,36 @@
+.container {
+  padding: 1rem 0;
+}
+
+ul.breadcrumbs {
+  list-style: none;
+  padding: unset;
+  margin: unset;
+}
+
+ul.breadcrumbs li {
+  display: inline;
+}
+
+ul.breadcrumbs li+li:before {
+  content: "/\00a0";
+  padding: 8px;
+  color: var(--color-text-primary);
+}
+
+ul.breadcrumbs a,
+ul.breadcrumbs span {
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+ul.breadcrumbs li>a {
+  color: #0275d8;
+  text-decoration: none;
+}
+
+/* Add a color on mouse-over */
+ul.breadcrumbs li a:hover {
+  color: #01447e;
+  text-decoration: underline;
+}

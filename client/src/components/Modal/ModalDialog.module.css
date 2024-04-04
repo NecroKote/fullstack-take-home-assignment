@@ -1,0 +1,47 @@
+.modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modalBackdrop .modal {
+  min-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+}
+
+.modalBackdrop .modal .modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+
+    position: sticky;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modalBackdrop .modal .modalBody {
+  padding: 0 1rem;
+}
+
+.modalBackdrop .modal .modalActions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+
+    position: sticky;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+}
