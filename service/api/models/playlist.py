@@ -14,21 +14,19 @@ class PlaylistTrack(models.Model):
     # TODO: maybe replace on_delete with SET_DEFAULT and a protected "Track" called "<Removed Track>"
     track = models.ForeignKey("Track", on_delete=models.CASCADE)
 
-    previous = models.OneToOneField(
+    previous = models.ForeignKey(
         "self",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name="+",
-        unique=False,
     )
-    next = models.OneToOneField(
+    next = models.ForeignKey(
         "self",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name="+",
-        unique=False,
     )
 
     class Meta:
