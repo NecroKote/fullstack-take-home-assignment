@@ -7,7 +7,10 @@ export const PlaylistBreadcrumbs = ({ playlist, setSelected }) => {
     <nav name="playlists" className={styles.container}>
       <ul className={styles.breadcrumbs}>
         <li key={-1} className={styles.breadcrumb}>
-          <a href="#" onClick={() => setSelected()}>All</a>
+          {playlist
+            ? <a href="#" onClick={() => setSelected()}>All</a>
+            : <span>All</span>
+          }
         </li>
         {playlist && (
           <li key={playlist.id}>

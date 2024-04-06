@@ -7,4 +7,12 @@
   box-shadow: unset;
   border: unset;
   padding: unset;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.playPauseButton>svg {
+  display: block;
 }

@@ -1,0 +1,27 @@
+.inputRow {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.inputRow input {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+}
+
+.inputRow input:focus {
+    outline: none;
+    border-color: #7cd271;
+}
+
+.inputRow input::placeholder {
+    color: #ccc;
+}
+
+.inputRow label {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}

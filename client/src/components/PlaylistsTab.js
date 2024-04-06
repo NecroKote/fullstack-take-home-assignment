@@ -1,13 +1,15 @@
 import React, { useContext, useState } from 'react';
+import styles from './PlaylistsTab.module.css';
 
 import { PlaylistsContext } from '../context/PlaylistsContext';
 import { Playlists, PlaylistBreadcrumbs, PlaylistTracks } from './Playlist';
-import useToasts from '../hooks/useToasts';
+import { AddButton } from './Button';
+import { CreatePlayListModal } from './Playlist';
 
 export const PlaylistsTab = ({ }) => {
     const context = useContext(PlaylistsContext);
-    const { sendToast } = useToasts();
     const [selected, setSelected] = useState(null);
+    const [showCreateModal, setShowCreateModal] = useState(false);
 
     const handleTrackRemove = (playlistId, playlistTrackId) => {
         context.removeTrack(playlistId, playlistTrackId)
@@ -19,19 +21,19 @@ export const PlaylistsTab = ({ }) => {
     }
 
     return (
-        <div className="playlistsTab">
-            <PlaylistBreadcrumbs playlist={selected} setSelected={setSelected} />
+        <div className={styles.tab}>
+            <div className={styles.breadcrumbsRow}>
+              <PlaylistBreadcrumbs playlist={selected} setSelected={setSelected} />
+              {!selected && (
+                <div className={styles.createAction}>
+                  <AddButton onClick={() => setShowCreateModal(true) } />
+                  {showCreateModal && <CreatePlayListModal onClose={() => setShowCreateModal(false)} />}
+                </div>
+              )}
+            </div>
             {selected
                 ? <PlaylistTracks playlist={selected} onRemove={handleTrackRemove} />
-                : (<>
-                    <div>
-                        <form onSubmit={(e) => { e.preventDefault(); context.create({ name: e.currentTarget.name.value }) }}>
-                            <input type="text" name="name" placeholder="Playlist Name" />
-                            <button type="submit">New</button>
-                        </form>
-                    </div>
-                    <Playlists items={context.playlists} onRemove={context.remove} onSelect={setSelected} />
-                </>)
+                : <Playlists items={context.playlists} onRemove={context.remove} onSelect={setSelected} />
             }
         </div>
     );
