@@ -20,7 +20,7 @@ export const PlaylistTracks = ({ playlist, onRemove }) => {
         <List
           className={styles.playlistTracks}
           items={tracks}
-          noItemsContent={isLoading ? null : <>No tracks in this playlist</>}
+          noItemsContent={isLoading ? null : <>No tracks in this playlist. Add some from "Tracks"</>}
           itemKey={(tr) => tr.id}
           itemActions={(tr, ix) => (
             <>

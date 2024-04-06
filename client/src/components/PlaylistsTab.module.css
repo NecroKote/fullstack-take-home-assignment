@@ -1,12 +1,10 @@
-.tab {
-}
+.tab {}
 
-.createAction {
-
-}
+.createAction {}
 
 .breadcrumbsRow {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding: 0 1rem;
 }

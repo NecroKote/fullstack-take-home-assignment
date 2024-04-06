@@ -26,9 +26,8 @@ export const CreatePlayListModal = ({ onClose }) => {
       header={<h1>Create a new playlist</h1>}
       okDisabled={!name}
     >
-      <div class={styles.inputRow}>
-        <label>Name</label>
-        <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+      <div className={styles.inputRow}>
+        <input type="text" placeholder="Playlist Name" value={name} onChange={(e) => setName(e.target.value)} />
       </div>
     </ModalDialog>
   );
