@@ -8,7 +8,7 @@ export const PlaylistsContextActions = createContext();
 export const PlaylistsContextProvider = ({ children }) => {
   const apiHost = useApiHost();
 
-  const { data: playlists, isLoading, errorMsg, refresh } = useApiData('playlists/', true);
+  const { data: playlists, isLoading, errorMsg, load: refresh } = useApiData('playlists/', true);
 
   const create = useCallback(({ name }) => {
     return fetch(`${apiHost}/playlists/`, {

@@ -9,7 +9,7 @@ export const Playlists = ({ items, selected, onSelect, onRemove }) => {
     <List className={styles.playlists}
       noItemsContent={<ListRowEmpty>No playlists</ListRowEmpty>}
     >
-      {items.map((pl) =>
+      {(items || []).map((pl) =>
         <ListRow key={pl.id}
           title={pl.name}
           selected={selected && selected.id === pl.id}
