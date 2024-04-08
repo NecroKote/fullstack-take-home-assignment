@@ -1,6 +1,5 @@
-import { useState, createContext, useEffect, useCallback, useMemo, useReducer } from 'react';
+import { useState, createContext, useCallback, useMemo, useReducer } from 'react';
 
-// TODO: rename to NowPlayingContext
 export const PlayerContextState = createContext();
 export const PlayerContextActions = createContext();
 
@@ -10,7 +9,6 @@ const initialState = {
   playlist: { position: -1, tracks: null },
   progress: { time: -Infinity, duration: +Infinity, progress: 0 }
 };
-const copyInitialState = () => ({ ...initialState, playlist: { ...initialState.playlist }, progress: { ...initialState.progress } });
 
 const playerReducer = (state, action) => {
   switch (action.type) {
@@ -24,7 +22,7 @@ const playerReducer = (state, action) => {
       return { ...state, progress: { ...state.progress, ...action.progress } };
 
     case 'playTrack':
-      return { ...copyInitialState(), currentTrack: action.track };
+      return { ...initialState, currentTrack: action.track };
 
     case 'playTracks':
       const tracks = action.tracks || [];
@@ -62,7 +60,7 @@ const playerReducer = (state, action) => {
 };
 
 export const PlayerContextProvider = ({ children }) => {
-  const [store, dispatch] = useReducer(playerReducer, copyInitialState());
+  const [store, dispatch] = useReducer(playerReducer, { ...initialState });
   const [currentPlayerRef, setCurrentPlayerRef] = useState();
 
   const playTrack = useCallback((track) => {

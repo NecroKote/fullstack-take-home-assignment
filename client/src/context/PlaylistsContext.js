@@ -37,7 +37,7 @@ export const PlaylistsContextProvider = ({ children }) => {
   }, [apiHost, refresh])
 
   const remove = useCallback((id) => {
-    return fetch(`${apiHost}/playlists/${id}`, {
+    return fetch(`${apiHost}/playlists/${id}/`, {
       method: "DELETE",
     }).then(refresh);
   }, [apiHost, refresh])
