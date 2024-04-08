@@ -1,7 +1,7 @@
 import styles from "./ListRow.module.css";
 
-export const ListRow = ({ className, title, subtitle, actions, secondaryActions, onClick }) => {
-  const itemClass = `${styles.row} ${className || ''} ${onClick ? styles.clickable : ''}`
+export const ListRow = ({ className, title, subtitle, actions, secondaryActions, onClick, selected }) => {
+  const itemClass = `${styles.row} ${className || ''} ${onClick ? styles.clickable : ''} ${selected ? styles.selected : ''}`
 
   return (
     <div className={itemClass}>

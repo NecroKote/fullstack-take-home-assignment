@@ -10,7 +10,7 @@ export const Playlists = ({ items, selected, onSelect, onRemove }) => {
       noItemsContent={<ListRowEmpty>No playlists</ListRowEmpty>}
     >
       {items.map((pl) =>
-        <ListRow key={pl.id} className={selected ? styles.selected : ''}
+        <ListRow key={pl.id}
           title={pl.name}
           selected={selected && selected.id === pl.id}
           onClick={() => onSelect(pl)}
