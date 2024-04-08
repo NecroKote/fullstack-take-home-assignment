@@ -12,88 +12,62 @@
   --color-primary-hover: #333;
 }
 
-.list {
-  padding: 0 1rem;
-}
-
-.list .listRow,
-.list .listRowEmpty {
-  display: flex;
-  align-items: center;
+.row {
   height: 5rem;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
   background: var(--color-background);
-  border-bottom: 1px solid var(--color-list-item-border, #333);
 }
 
-.list .listRow.clickable {
+.empty {
+  justify-content: center;
+  align-items: center;
+  color: var(--color-secondary-text);
+  border-bottom: unset;
+}
+
+.clickable {
   cursor: pointer;
 }
 
-.list .listRow.clickable:hover {
+.clickable:hover {
   --color-primary-text: var(--color-primary-text-hover);
   --color-background: var(--color-background-hover);
   --color-action-background: var(--color-action-background-hover);
 }
 
-.list .listRowEmpty {
-  justify-content: center;
-  color: var(--color-secondary-text);
-  border-bottom: unset;
-}
-
-.list .placeholder {
-  border: 2px dashed rgb(203 213 225);
-  border-radius: 0.25rem;
-}
-
-.list .listRow.selected {
+.selected {
   --color-primary-text: var(--color-primary-text-selected);
   --color-background: var(--color-background-selected);
 }
 
-.list .listRowActions {
+.actions {
   flex: 0;
   display: flex;
   align-items: center;
   flex-direction: row;
 }
 
-.list .listRowActions button:hover {
+.actions button:hover {
   cursor: pointer;
   background: var(--color-secondary-text);
 }
 
-.list .listRowActions button img {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
-.list .listRowTitleWrap {
+.titleWrap {
   flex: 1;
   display: flex;
   height: 100%;
   flex-direction: column;
   justify-content: center;
+  padding: 0 1rem;
 }
 
-.list .listRow:last-child {
-  border-bottom: none;
-}
-
-.list .listRowTitle {
+.title {
   color: var(--color-primary-text);
   font-weight: 600;
 }
 
-.list .listRowSubtitle {
+.subtitle {
   color: var(--color-secondary-text);
-}
-
-.dragHandle {}
-
-.dragHandle::before {
-  content: '☰';
-  font-size: 1.5rem;
-  color: var(--color-secondary-text);
-  margin-right: 1rem;
 }

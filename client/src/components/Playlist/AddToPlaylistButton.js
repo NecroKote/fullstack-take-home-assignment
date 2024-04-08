@@ -7,13 +7,16 @@ import { AddButton } from "../Button";
 export const AddToPlaylistButton = ({ track }) => {
   const { sendToast } = useToasts();
   const { addTrack } = useContext(PlaylistsContext);
-  const { select } = useContext(PlaylistSelectModalContext);
+  const { select, CancelledError } = useContext(PlaylistSelectModalContext);
 
   const handleClick = () => {
     select()
-      .then((playlist) => addTrack(playlist.id, track.id).then(() => ({ playlist, track })))
-      .then(({ playlist, track }) => {
-        sendToast(`Track added to playist '${playlist.name}'`, 5000);
+      .then((playlist) =>
+        addTrack(playlist.id, track.id)
+          .then(() => sendToast(`Track added to playist '${playlist.name}'`, 5000))
+      )
+      .catch((e) => {
+        if (e != CancelledError) throw e
       })
   }
 

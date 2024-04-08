@@ -1,27 +1,23 @@
 import React from "react";
 import styles from "./TracksList.module.css";
 
-import { List } from "../List";
-import PlayTrackButton from "../Player/PlayTrackButton";
+import { List, ListRow } from "../List";
+import { PlayTrackButton } from "../Player";
 import { AddToPlaylistButton } from "../Playlist";
 
-export function TracksList ({tracks, handlePlay}) {
-	const showPlay = !!handlePlay;
 
-	return (
-		<List
-			className={styles.tracksList}
-			items={tracks}
-			itemActions={(tr, ix) => showPlay && (
-				<PlayTrackButton className={styles.playButton} track={tr} />
-			)}
-			itemSecondaryActions={(tr, ix) => (
-				<AddToPlaylistButton track={tr} />
-			)}
-			itemTitle={(tr) => tr.title}
-			itemSubtitle={(tr) => tr.main_artists.join(", ")}
-		/>
-	)
+export function TracksList({ tracks, showPlay, showAddToPlaylist }) {
+  return (
+    <List className={styles.tracksList}>
+      {tracks.map((track) => (
+        <ListRow key={track.id}
+          title={track.title}
+          subtitle={track.main_artists.join(", ")}
+          actions={showPlay && <PlayTrackButton track={track} />}
+          secondaryActions={showAddToPlaylist && <AddToPlaylistButton track={track} />} />
+      ))}
+    </List>
+  )
 }
 
 export default TracksList;

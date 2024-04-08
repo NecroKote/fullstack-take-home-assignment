@@ -4,16 +4,15 @@ import { PlayerContext } from '../context/PlayerContext';
 import { TracksList } from './Tracks';
 import { PlaceholderLoader } from './Loader';
 
-export const TracksTab = ({}) => {
-    const { tracks, isLoading } = useContext(TracksContext);
-    const { playTrack } = useContext(PlayerContext);
+export const TracksTab = ({ }) => {
+  const { tracks, isLoading } = useContext(TracksContext);
 
-    return (
-        <div className="TracksTab">
-            <PlaceholderLoader isLoading={isLoading}/>
-            <TracksList tracks={tracks} handlePlay={playTrack} />
-        </div>
-    );
+  return (
+    <div className="TracksTab">
+      <PlaceholderLoader isLoading={isLoading} />
+      <TracksList tracks={tracks} showPlay={true} showAddToPlaylist={true} />
+    </div>
+  );
 };
 
 export default TracksTab;

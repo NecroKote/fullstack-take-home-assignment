@@ -1,23 +1,24 @@
 import React from "react";
 import styles from "./Playlists.module.css";
 
-import List from "../List";
+import { List, ListRow, ListRowEmpty } from "../List";
 import { DeleteButton } from "../Button";
 
 export const Playlists = ({ items, selected, onSelect, onRemove }) => {
-
   return (
-    <List
-      className={styles.playlists}
-      items={items}
-      noItemsContent={<>No playlists</>}
-      itemKey={(pl) => pl.id}
-      itemSelected={(pl) => selected && pl.id === selected.id}
-      itemClick={(pl, ix, e) => onSelect && onSelect(pl)}
-      itemSecondaryActions={(pl, ix) => onRemove && <DeleteButton onClick={() => onRemove(pl.id)} />}
-      itemTitle={(pl) => pl.name}
-    />
-  );
+    <List className={styles.playlists}
+      noItemsContent={<ListRowEmpty>No playlists</ListRowEmpty>}
+    >
+      {items.map((pl) =>
+        <ListRow key={pl.id} className={selected ? styles.selected : ''}
+          title={pl.name}
+          selected={selected && selected.id === pl.id}
+          onClick={() => onSelect(pl)}
+          secondaryActions={onRemove && <DeleteButton onClick={(e) => { e.preventDefault(); onRemove(pl.id) }} />}
+        />
+      )}
+    </List>
+  )
 }
 
 export default Playlists;

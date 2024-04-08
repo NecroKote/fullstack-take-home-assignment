@@ -4,6 +4,7 @@ import { Playlists } from "../components/Playlist";
 import { ModalDialog } from "../components/Modal";
 
 export const PlaylistSelectModalContext = createContext();
+export const CancelledError = new Error('cancelled');
 
 export const PlaylistSelectModalContextProvider = ({ children }) => {
   const playlistContext = useContext(PlaylistsContext);
@@ -27,7 +28,6 @@ export const PlaylistSelectModalContextProvider = ({ children }) => {
   }, [selectedPlaylist]);
 
   const handleOk = useCallback(() => {
-    console.debug('ok', (selectedPlaylist || {}).id)
     if (promiseMethods.resolve == undefined) return;
     promiseMethods.resolve(selectedPlaylist);
 
@@ -37,9 +37,8 @@ export const PlaylistSelectModalContextProvider = ({ children }) => {
   }, [promiseMethods, selectedPlaylist])
 
   const handleCancel = useCallback(() => {
-    console.debug('cancel', (selectedPlaylist || {}).id)
     if (promiseMethods.reject == undefined) return;
-    promiseMethods.reject();
+    promiseMethods.reject(CancelledError);
 
     setSelectedPlaylist(null);
     setShowModal(false);
@@ -48,6 +47,7 @@ export const PlaylistSelectModalContextProvider = ({ children }) => {
 
   const expose = {
     select,
+    CancelledError,
   }
 
   return (

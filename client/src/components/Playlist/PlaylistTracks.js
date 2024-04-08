@@ -1,38 +1,43 @@
-import React, { useContext } from "react";
+import React from "react";
 import styles from "./PlaylistTracks.module.css";
 
-import List from "../List";
-import { PlaceholderLoader } from "../Loader";
-import PlayTrackButton from "../Player/PlayTrackButton";
-import { usePlaylistTracks } from "../../hooks/usePlaylist";
+import { List, ListRow, ListRowEmpty } from "../List";
+import { PlayTrackButton } from "../Player";
 import { DeleteButton } from "../Button";
+import { PlaceholderLoader } from '../Loader';
+import { usePlaylistTracks } from "../../hooks/usePlaylist";
 
-// DeleteButton
+export const PlaylistTracks = ({ playlistId, onSwitchPlaces, onRemove }) => {
+  const { data: tracks, isLoading, errorMsg } = usePlaylistTracks(playlistId, true, onSwitchPlaces);
 
-export const PlaylistTracks = ({ playlist, onRemove }) => {
-  const { data: tracks, isLoading, errorMsg } = usePlaylistTracks({ playlistId: playlist.id, autoload: true, refresh: playlist });
+  const onDragSwitchPlaces = (from, to, position) => {
+    onSwitchPlaces(playlistId, tracks[from].id, tracks[to].id, position);
+  }
 
   return (
     <>
       {errorMsg && <div>Error: {errorMsg}</div>}
       <PlaceholderLoader isLoading={isLoading} />
-      {(
-        <List
-          className={styles.playlistTracks}
-          items={tracks}
-          noItemsContent={isLoading ? null : <>No tracks in this playlist. Add some from "Tracks"</>}
-          itemKey={(tr) => tr.id}
-          itemActions={(tr, ix) => (
-            <>
-              <span className={styles.trackNumber}>#{ix + 1}</span>
-              <PlayTrackButton className={styles.playButton} track={tr.track} />
-            </>
-          )}
-          itemSecondaryActions={(tr, ix) => onRemove && <DeleteButton onClick={() => onRemove(playlist.id, tr.id)} />}
-          itemTitle={(tr) => tr.track.title}
-          itemSubtitle={(tr) => (tr.track.main_artists.join(',') || 'Unknown Artist')}
-        />
-      )}
+      <List
+        noItemsContent={isLoading ? null : <ListRowEmpty>No tracks in this playlist. Add some from "Tracks"</ListRowEmpty>}
+        draggable={true}
+        onDragSwitchPlaces={onDragSwitchPlaces}
+      >
+        {tracks && tracks.map((tr, ix) => (
+          <ListRow
+            key={tr.id}
+            actions={
+              <>
+                <span className={styles.trackNumber}>#{ix + 1}</span>
+                <PlayTrackButton track={tr.track} />
+              </>
+            }
+            secondaryActions={onRemove && <DeleteButton onClick={() => onRemove(playlistId, tr.id)} />}
+            title={tr.track.title}
+            subtitle={(tr.track.main_artists.join(',') || 'Unknown Artist')}
+          />
+        ))}
+      </List>
     </>
   );
 }
