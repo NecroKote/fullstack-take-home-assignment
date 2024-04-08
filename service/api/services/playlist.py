@@ -138,3 +138,57 @@ def remove_track_from_playlist(
             next_track.save()
 
         track.delete()
+
+
+POS_BEFORE = 0
+POS_AFTER = 1
+def switch_tracks_in_playlist(
+    source: models.PlaylistTrack | str, destination: models.PlaylistTrack | str, position: POS_BEFORE | POS_AFTER
+):
+    """
+    Switch the position of two tracks in the playlist.
+    """
+
+    def _pl_track(track_or_id: models.PlaylistTrack | str):
+        return models.PlaylistTrack.objects.prefetch_related("next", "previous").get(pk=_track_id(track_or_id))
+
+    def _opt_track(obj):
+        return cast(models.PlaylistTrack | None, obj)
+
+    # TODO: store all the models that we are goind to change in 
+    # TODO: ... a lookup table, so that we minimise the number of update queries
+
+    with atomic():
+        # "extract" source track
+        source = _pl_track(source)
+        sp, sn = _opt_track(source.previous), _opt_track(source.next)
+        source.next = source.previous = None  # just in case
+        if sp:
+            sp.next = sn
+            sp.save()
+        if sn:
+            sn.previous = sp
+            sn.save()
+
+        # insert `source` into relative relative `position` from `destination`
+        destination = _pl_track(destination)
+        if position == POS_BEFORE:
+            source.previous = destination.previous
+            source.next = destination
+            if dp := destination.previous:
+                dp.next = source
+                dp.save()
+
+            destination.previous = source
+
+        else:
+            source.previous = destination
+            source.next = destination.next
+            if dn := destination.next:
+                dn.previous = source
+                dn.save()
+
+            destination.next = source
+
+        source.save()
+        destination.save()

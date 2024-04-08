@@ -35,3 +35,13 @@ class PlaylistTrackSerializer(serializers.ModelSerializer):
             "id",
             "track",
         ]
+
+class PlaylistTrackFieldInPlaylist(serializers.SlugRelatedField):
+    def get_queryset(self):
+        playlist_id = self.context["playlist_id"]
+        return models.PlaylistTrack.objects.filter(playlist_id=playlist_id)
+
+class PlaylistTrackOrderSerializer(serializers.Serializer):
+    source = PlaylistTrackFieldInPlaylist(slug_field="id")
+    destination = PlaylistTrackFieldInPlaylist(slug_field="id")
+    position = serializers.IntegerField(min_value=0, max_value=1, required=True)
