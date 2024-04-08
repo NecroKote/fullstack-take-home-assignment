@@ -1,16 +1,19 @@
-import React, { useContext, useState, useCallback } from 'react';
+import React, { useContext, useState, useCallback, useEffect } from 'react';
 import styles from './PlaylistsTab.module.css';
 
 import { PlaylistsContext } from '../context/PlaylistsContext';
-import { Playlists, PlaylistBreadcrumbs, PlaylistTracks } from './Playlist';
-import { AddButton } from './Button';
-import { CreatePlayListModal } from './Playlist';
+import { PlayerContextActions } from '../context/PlayerContext';
+import { Playlists, PlaylistBreadcrumbs, PlaylistTracks, CreatePlayListModal } from './Playlist';
+import { AddButton, PlayPauseButton } from './Button';
 import { PlaceholderLoader } from './Loader';
+import { usePlaylistTracks } from "../hooks/usePlaylist";
 
 export const PlaylistsTab = () => {
   const [selected, setSelected] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const { playTracks } = useContext(PlayerContextActions)
   const { playlists, isLoading, remove, removeTrack, switchTracks } = useContext(PlaylistsContext);
+  const { data: playlistTracks, isLoading: loadingTracks, errorMsg, load, reset } = usePlaylistTracks(selected && selected.id, false, selected);
 
   const handleTrackRemove = useCallback((playlistId, playlistTrackId) => {
     removeTrack(playlistId, playlistTrackId)
@@ -28,19 +31,32 @@ export const PlaylistsTab = () => {
       });
   }, [selected]);
 
+  useEffect(() => selected ? load(true) : reset(), [selected])
+
+  const playlistIsPlyable = !!selected && !loadingTracks && !!(playlistTracks && playlistTracks.length);
+
   return (
     <div className={styles.tab}>
       <div className={styles.breadcrumbsRow}>
         <PlaylistBreadcrumbs playlist={selected} setSelected={setSelected} />
-        {!selected && (
-          <div className={styles.createAction}>
-            <AddButton onClick={() => setShowCreateModal(true)} />
-            {showCreateModal && <CreatePlayListModal onClose={() => setShowCreateModal(false)} />}
-          </div>
-        )}
+        <div className={styles.actions}>
+          {selected
+            ? <PlayPauseButton disabled={!playlistIsPlyable} onClick={() => playTracks(playlistTracks.map(tr => tr.track))} />
+            : (
+              <>
+                <AddButton onClick={() => setShowCreateModal(true)} />
+                {showCreateModal && <CreatePlayListModal onClose={() => setShowCreateModal(false)} />}
+              </>
+            )
+          }
+        </div>
       </div>
       {selected
-        ? <PlaylistTracks playlistId={selected.id} onSwitchPlaces={handleSwitchPlaces} onRemove={handleTrackRemove} />
+        ? (<>
+          {errorMsg && <div>Error: {errorMsg}</div>}
+          <PlaceholderLoader isLoading={loadingTracks} />
+          <PlaylistTracks playlistId={selected.id} tracks={playlistTracks} onSwitchPlaces={handleSwitchPlaces} onRemove={handleTrackRemove} />
+        </>)
         : (<>
           <PlaceholderLoader isLoading={isLoading} />
           <Playlists items={playlists} onRemove={remove} onSelect={setSelected} />

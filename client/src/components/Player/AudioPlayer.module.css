@@ -7,19 +7,29 @@
 }
 
 .albumArt {
-  width: 5rem;
+  height: 5rem;
   border-radius: 4px;
   margin-right: 1.5rem;
 }
 
-.albumArt > img {
+.albumArt>img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.togglePlaybackButton {
+.controls {
   margin: 0 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.playButton {
+  margin: 0 0.2rem;
+}
+
+.smallButton {
+  padding: 0.4rem !important;
 }
 
 .trackInfo {

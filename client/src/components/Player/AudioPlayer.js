@@ -1,21 +1,26 @@
 import React, { useRef, useState, useEffect } from "react";
 import styles from "./AudioPlayer.module.css";
 
-import PlayPauseButton from "./PlayPauseButton";
+import { PlayPauseButton, PlayNextButton, PlayPrevButton } from "../Button";
 
-function AudioPlayer({ track, onPlayerState, onPlayerProgress}) {
+function AudioPlayer({ track, onPlayerState, onPlayerProgress, hasNext, onPlayNext, hasPrev, onPlayPrev, }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const audioRef = useRef(null);
 
   const handlePlay = () => {
     setIsPlaying(true);
-    onPlayerState && onPlayerState(audioRef.current, true);
+    onPlayerState && onPlayerState(audioRef.current, 'play');
   };
 
   const handlePause = () => {
     setIsPlaying(false);
-    onPlayerState && onPlayerState(audioRef.current, false);
+    onPlayerState && onPlayerState(audioRef.current, 'pause');
+  };
+
+  const handleEnded = () => {
+    setIsPlaying(false);
+    onPlayerState && onPlayerState(audioRef.current, 'ended');
   };
 
   const handleTimeUpdate = (e) => {
@@ -41,6 +46,7 @@ function AudioPlayer({ track, onPlayerState, onPlayerProgress}) {
     audioRef.current.addEventListener("play", handlePlay);
     audioRef.current.addEventListener("pause", handlePause);
     audioRef.current.addEventListener("timeupdate", handleTimeUpdate);
+    audioRef.current.addEventListener("ended", handleEnded);
   }, []);
 
   useEffect(() => {
@@ -52,7 +58,11 @@ function AudioPlayer({ track, onPlayerState, onPlayerProgress}) {
     <>
       <audio src={track.audio} ref={audioRef} />
       <div className={styles.audioPlayer}>
-        <PlayPauseButton className={styles.togglePlaybackButton} isPlaying={isPlaying} onClick={handleTogglePlaybackClick} />
+        <div className={styles.controls}>
+          <PlayPrevButton disabled={!hasPrev} className={styles.smallButton} onClick={onPlayPrev} />
+          <PlayPauseButton className={styles.playButton} isPlaying={isPlaying} onClick={handleTogglePlaybackClick} />
+          <PlayNextButton disabled={!hasNext} className={styles.smallButton} onClick={onPlayNext} />
+        </div>
         <div className={styles.albumArt}>
           <img src={track.cover_art} alt={track.title} />
         </div>
@@ -67,7 +77,7 @@ function AudioPlayer({ track, onPlayerState, onPlayerProgress}) {
             type="range"
             min="1"
             max="1000"
-            value={progress * 1000}
+            value={progress ? progress * 1000 : 1000}
             className={styles.slider}
             onChange={handleSliderChange}
           />

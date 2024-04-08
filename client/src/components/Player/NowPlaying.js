@@ -1,15 +1,21 @@
 import React, { useContext } from 'react';
-import { PlayerContext } from '../../context/PlayerContext';
+import { PlayerContextState, PlayerContextActions } from '../../context/PlayerContext';
 import AudioPlayer from './AudioPlayer';
 
 export const NowPlaying = () => {
-    const context = useContext(PlayerContext);
+  const { currentTrack, hasNext, hasPrev } = useContext(PlayerContextState);
+  const { onPlayerState, onPlayerProgress, playNext, playPrev } = useContext(PlayerContextActions);
 
-    return (
-        <>
-            {context.currentTrack && <AudioPlayer onPlayerState={context.onPlayerState} onPlayerProgress={context.onPlayerProgress} track={context.currentTrack} />}
-        </>
-    );
+  return (
+    <>
+      {currentTrack && <AudioPlayer
+        track={currentTrack}
+        onPlayerState={onPlayerState} onPlayerProgress={onPlayerProgress}
+        hasNext={hasNext} onPlayNext={playNext}
+        hasPrev={hasPrev} onPlayPrev={playPrev}
+      />}
+    </>
+  );
 }
 
 export default NowPlaying;

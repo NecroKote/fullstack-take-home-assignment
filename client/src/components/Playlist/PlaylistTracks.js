@@ -4,11 +4,8 @@ import styles from "./PlaylistTracks.module.css";
 import { List, ListRow, ListRowEmpty } from "../List";
 import { PlayTrackButton } from "../Player";
 import { DeleteButton } from "../Button";
-import { PlaceholderLoader } from '../Loader';
-import { usePlaylistTracks } from "../../hooks/usePlaylist";
 
-export const PlaylistTracks = ({ playlistId, onSwitchPlaces, onRemove }) => {
-  const { data: tracks, isLoading, errorMsg } = usePlaylistTracks(playlistId, true, onSwitchPlaces);
+export const PlaylistTracks = ({ playlistId, tracks, onSwitchPlaces, onRemove }) => {
 
   const onDragSwitchPlaces = (from, to, position) => {
     onSwitchPlaces(playlistId, tracks[from].id, tracks[to].id, position);
@@ -16,10 +13,8 @@ export const PlaylistTracks = ({ playlistId, onSwitchPlaces, onRemove }) => {
 
   return (
     <>
-      {errorMsg && <div>Error: {errorMsg}</div>}
-      <PlaceholderLoader isLoading={isLoading} />
       <List
-        noItemsContent={isLoading ? null : <ListRowEmpty>No tracks in this playlist. Add some from "Tracks"</ListRowEmpty>}
+        noItemsContent={<ListRowEmpty>No tracks in this playlist. Add some from "Tracks"</ListRowEmpty>}
         draggable={true}
         onDragSwitchPlaces={onDragSwitchPlaces}
       >
