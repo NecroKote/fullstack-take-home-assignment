@@ -1,12 +1,13 @@
 import styles from "./Button.module.css";
 
 export const Button = (props) => {
-  const { children, onClick, disabled, kind } = props;
+  const { className, children, onClick, disabled, kind } = props;
+  const kindStyle = styles[kind] || '';
 
   return (
     <button
       type="button"
-      className={`${styles.button} ${styles[kind]}`}
+      className={`${className} ${styles.button} ${kindStyle}`}
       onClick={onClick}
       disabled={disabled}
     >
@@ -35,5 +36,33 @@ export const AddButton = (props) => (
     </svg>
   </Button>
 )
+
+export const PlayPauseButton = ({ isPlaying, ...props }) => (
+  <Button {...props} kind="playPause">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      {isPlaying
+        ? <path fillRule="evenodd" clipRule="evenodd" d="M10 5H7V19H10V5ZM17 5H14V19H17V5Z" />
+        : <path d="M20 12L8 5V19L20 12Z" />}
+    </svg>
+  </Button>
+)
+
+export const PlayNextButton = (props) => (
+  <Button {...props} kind="playNext">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path fillRule="evenodd" clipRule="evenodd" d="M2.538 4.113a1 1 0 0 1 1.035.068l10 7a1 1 0 0 1 0 1.638l-10 7A1 1 0 0 1 2 19V5a1 1 0 0 1 .538-.887ZM16 5.8A1.8 1.8 0 0 1 17.8 4h1.4A1.8 1.8 0 0 1 21 5.8v12.4a1.8 1.8 0 0 1-1.8 1.8h-1.4a1.8 1.8 0 0 1-1.8-1.8V5.8Z" />
+    </svg>
+  </Button>
+)
+
+export const PlayPrevButton = (props) => (
+  <Button {...props} kind="playNext">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 5.8A1.8 1.8 0 0 1 4.8 4h1.4A1.8 1.8 0 0 1 8 5.8v12.4A1.8 1.8 0 0 1 6.2 20H4.8A1.8 1.8 0 0 1 3 18.2V5.8ZM21.462 4.113A1 1 0 0 1 22 5v14a1 1 0 0 1-1.573.82l-10-7a1 1 0 0 1 0-1.64l10-7a1 1 0 0 1 1.035-.067Z" />
+    </svg>
+  </Button>
+)
+
+
 
 export default Button;
