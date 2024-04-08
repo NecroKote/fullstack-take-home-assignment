@@ -10,7 +10,7 @@ export const ListRow = ({ className, title, subtitle, actions, secondaryActions,
         <div className={styles.title}>{title}</div>
         {subtitle && <div className={styles.subtitle}>{subtitle}</div>}
       </div>
-      {secondaryActions && <div className={styles.actions}>{secondaryActions}</div>}
+      {secondaryActions && <div className={`${styles.actions} ${styles.secondary}`}>{secondaryActions}</div>}
     </div>
   )
 };

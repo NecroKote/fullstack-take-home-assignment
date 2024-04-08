@@ -49,9 +49,8 @@
   flex-direction: row;
 }
 
-.actions button:hover {
-  cursor: pointer;
-  background: var(--color-secondary-text);
+.secondary {
+  margin-right: 1rem;
 }
 
 .titleWrap {

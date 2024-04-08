@@ -1,92 +1,13 @@
-:root {
-  --color-primary-text: #f4f4f4;
-  --color-primary-text-selected: #333;
-  --color-primary-text-hover: #333;
-  --color-secondary-text: #767676;
-  --color-background: none;
-  --color-background-selected: #e5e5e5;
-  --color-background-hover: #f4f4f4;
-  --color-action-background: #333;
-  --color-action-background-hover: #555;
-  --color-list-item-border: #333;
-  --color-primary-hover: #333;
-}
+.list {}
 
-.list {
-  padding: 0 1rem;
-}
-
-.list .listRow,
-.list .listRowEmpty {
+.listRow {
   display: flex;
   align-items: center;
-  height: 5rem;
-  background: var(--color-background);
-  border-bottom: 1px solid var(--color-list-item-border, #333);
+  border-bottom: 1px solid #333;
 }
 
-.list .listRow.clickable {
-  cursor: pointer;
-}
-
-.list .listRow.clickable:hover {
-  --color-primary-text: var(--color-primary-text-hover);
-  --color-background: var(--color-background-hover);
-  --color-action-background: var(--color-action-background-hover);
-}
-
-.list .listRowEmpty {
-  justify-content: center;
-  color: var(--color-secondary-text);
+.listRow:last-child {
   border-bottom: unset;
-}
-
-.list .placeholder {
-  border: 2px dashed rgb(203 213 225);
-  border-radius: 0.25rem;
-}
-
-.list .listRow.selected {
-  --color-primary-text: var(--color-primary-text-selected);
-  --color-background: var(--color-background-selected);
-}
-
-.list .listRowActions {
-  flex: 0;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-}
-
-.list .listRowActions button:hover {
-  cursor: pointer;
-  background: var(--color-secondary-text);
-}
-
-.list .listRowActions button img {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
-.list .listRowTitleWrap {
-  flex: 1;
-  display: flex;
-  height: 100%;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.list .listRow:last-child {
-  border-bottom: none;
-}
-
-.list .listRowTitle {
-  color: var(--color-primary-text);
-  font-weight: 600;
-}
-
-.list .listRowSubtitle {
-  color: var(--color-secondary-text);
 }
 
 .dragHandle {}
@@ -94,6 +15,7 @@
 .dragHandle::before {
   content: '☰';
   font-size: 1.5rem;
-  color: var(--color-secondary-text);
+  color: #767676;
   margin-right: 1rem;
+  vertical-align: super;
 }
