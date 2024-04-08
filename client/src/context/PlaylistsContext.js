@@ -34,13 +34,13 @@ export const PlaylistsContextProvider = ({ children }) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ track: trackId }),
-    }).then(refresh);
+    });
   }, [apiHost])
 
   const removeTrack = useCallback((playlistId, playlistTrackId) => {
     return fetch(`${apiHost}/playlists/${playlistId}/tracks/${playlistTrackId}/`, {
       method: "DELETE",
-    }).then(refresh);
+    });
   }, [apiHost])
 
   const switchTracks = useCallback((playlistId, source, destination, position) => {
