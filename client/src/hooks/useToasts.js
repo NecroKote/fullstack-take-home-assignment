@@ -1,9 +1,8 @@
 import { useContext } from 'react';
-import { ToastContext } from '../context/ToastContext';
+import { ToastContextActions } from '../context/ToastContext';
 
 export const useToasts = () => {
-  const { sendToast } = useContext(ToastContext);
-  return { sendToast };
+  return useContext(ToastContextActions);
 }
 
 export default useToasts;

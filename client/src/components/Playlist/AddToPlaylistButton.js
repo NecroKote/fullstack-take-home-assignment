@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
-import { PlaylistsContext } from "../../context/PlaylistsContext";
+import { PlaylistsContextActions } from "../../context/PlaylistsContext";
 import { PlaylistSelectModalContext } from "../../context/PlaylistSelectModalContext";
 import useToasts from "../../hooks/useToasts";
 import { AddButton } from "../Button";
 
 export const AddToPlaylistButton = ({ track }) => {
   const { sendToast } = useToasts();
-  const { addTrack } = useContext(PlaylistsContext);
+  const { addTrack } = useContext(PlaylistsContextActions);
   const { select, CancelledError } = useContext(PlaylistSelectModalContext);
 
   const handleClick = () => {

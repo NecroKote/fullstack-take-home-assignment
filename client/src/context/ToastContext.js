@@ -1,6 +1,7 @@
 import { useState, createContext, useCallback, useRef } from 'react';
 
-export const ToastContext = createContext();
+export const ToastContextState = createContext();
+export const ToastContextActions = createContext();
 
 export const ToastContextProvider = ({ children }) => {
   const [toast, setToast] = useState();
@@ -19,15 +20,11 @@ export const ToastContextProvider = ({ children }) => {
     }, delay || 5000);
   }, []);
 
-  const exposed = {
-    show,
-    toast,
-    sendToast
-  };
-
   return (
-    <ToastContext.Provider value={exposed}>
-      {children}
-    </ToastContext.Provider>
+    <ToastContextState.Provider value={{ show, toast }}>
+      <ToastContextActions.Provider value={{ sendToast }}>
+        {children}
+      </ToastContextActions.Provider>
+    </ToastContextState.Provider>
   );
 };

@@ -1,22 +1,22 @@
 import React, { useContext, useState, useCallback } from 'react';
-import { PlaylistsContext } from '../../context/PlaylistsContext';
+import { PlaylistsContextActions } from '../../context/PlaylistsContext';
 import useToasts from '../../hooks/useToasts';
 import { ModalDialog } from '../Modal';
 import styles from './CreatePlayListModal.module.css';
 
 export const CreatePlayListModal = ({ onClose }) => {
-  const { create } = useContext(PlaylistsContext);
-  const [name, setName] = useState('');
+  const { create } = useContext(PlaylistsContextActions);
   const { sendToast } = useToasts();
+  const [name, setName] = useState('');
 
   const createNewPlaylist = useCallback(() => {
     return create({ name }).then(() => {
       sendToast(`Playlist '${name}' created`, 5000);
       onClose && onClose();
     });
-  }, [name]);
+  }, [create, name]);
 
-  const handleCancel = useCallback((e) => {
+  const handleCancel = useCallback(() => {
     setName('');
     onClose && onClose();
   }, [onClose]);

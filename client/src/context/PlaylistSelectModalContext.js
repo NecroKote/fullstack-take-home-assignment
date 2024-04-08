@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useCallback } from "react";
-import { PlaylistsContext } from "./PlaylistsContext";
+import { PlaylistsContextState } from "./PlaylistsContext";
 import { Playlists } from "../components/Playlist";
 import { ModalDialog } from "../components/Modal";
 
@@ -7,7 +7,7 @@ export const PlaylistSelectModalContext = createContext();
 export const CancelledError = new Error('cancelled');
 
 export const PlaylistSelectModalContextProvider = ({ children }) => {
-  const playlistContext = useContext(PlaylistsContext);
+  const { playlists } = useContext(PlaylistsContextState);
 
   const [showModal, setShowModal] = useState(false);
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
@@ -52,16 +52,16 @@ export const PlaylistSelectModalContextProvider = ({ children }) => {
 
   return (
     <PlaylistSelectModalContext.Provider value={expose}>
-      {children}
       {showModal && (
         <ModalDialog onCancel={handleCancel} onOk={handleOk}
           header={<h1>Select a Playlist</h1>}
           okTitle="Confirm"
           okDisabled={!selectedPlaylist}
         >
-          <Playlists items={playlistContext.playlists} selected={selectedPlaylist} onSelect={handleSelect} />
+          <Playlists items={playlists} selected={selectedPlaylist} onSelect={handleSelect} />
         </ModalDialog>
       )}
+      {children}
     </PlaylistSelectModalContext.Provider>
   );
 }

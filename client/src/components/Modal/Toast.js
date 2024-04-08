@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import styles from './Toast.module.css';
-import { ToastContext } from '../../context/ToastContext';
+import { ToastContextState } from '../../context/ToastContext';
 
 export const Toast = () => {
-  const { show, toast } = useContext(ToastContext);
+  const { show, toast } = useContext(ToastContextState);
   const [render, setRender] = useState(false);
   const ref = useRef();
 
@@ -18,12 +18,12 @@ export const Toast = () => {
     }
   }, [show]);
 
-   // `render` is to make Toast to go away from the DOM completely after it's hidden with animation
+  // `render` is to make Toast to go away from the DOM completely after it's hidden with animation
   return (render && (<div className={`${styles.toast}`} ref={ref}>
-      <div className={styles.toastMessage}>
-        {toast.message}
-      </div>
-    </div>)
+    <div className={styles.toastMessage}>
+      {toast.message}
+    </div>
+  </div>)
   );
 }
 

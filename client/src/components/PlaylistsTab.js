@@ -1,7 +1,7 @@
 import React, { useContext, useState, useCallback, useEffect } from 'react';
 import styles from './PlaylistsTab.module.css';
 
-import { PlaylistsContext } from '../context/PlaylistsContext';
+import { PlaylistsContextState, PlaylistsContextActions } from '../context/PlaylistsContext';
 import { PlayerContextActions } from '../context/PlayerContext';
 import { Playlists, PlaylistBreadcrumbs, PlaylistTracks, CreatePlayListModal } from './Playlist';
 import { AddButton, PlayPauseButton } from './Button';
@@ -12,7 +12,8 @@ export const PlaylistsTab = () => {
   const [selected, setSelected] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const { playTracks } = useContext(PlayerContextActions)
-  const { playlists, isLoading, remove, removeTrack, switchTracks } = useContext(PlaylistsContext);
+  const { playlists, isLoading } = useContext(PlaylistsContextState);
+  const { remove, removeTrack, switchTracks } = useContext(PlaylistsContextActions);
   const { data: playlistTracks, isLoading: loadingTracks, errorMsg, load, reset } = usePlaylistTracks(selected && selected.id, false, selected);
 
   const handleTrackRemove = useCallback((playlistId, playlistTrackId) => {
