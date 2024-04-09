@@ -12,6 +12,15 @@
             "label": "Migrate",
             "type": "shell",
             "command": ".venv/bin/python service/manage.py migrate",
+        },
+        {
+            "label": "Test",
+            "type": "shell",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "command": ".venv/bin/python service/manage.py test --settings=api.settings.test api",
         }
     ]
 }
