@@ -43,5 +43,5 @@ class PlaylistTrackFieldInPlaylist(serializers.SlugRelatedField):
 
 class PlaylistTrackOrderSerializer(serializers.Serializer):
     source = PlaylistTrackFieldInPlaylist(slug_field="id")
+    position = serializers.ChoiceField(choices=[(0, "Before"), (1, "After")], required=True)
     destination = PlaylistTrackFieldInPlaylist(slug_field="id")
-    position = serializers.IntegerField(min_value=0, max_value=1, required=True)

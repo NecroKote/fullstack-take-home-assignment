@@ -5,46 +5,63 @@ If it were any other framework than Django, it would be a service class with
 methods and an injected dependency on db registries.
 """
 
-from typing import Optional, Union, cast
+from enum import Enum
+from typing import cast
 
 from django.db.transaction import atomic
 
 from .. import models
 
-TrackOrId = Union[models.PlaylistTrack, int | str]
-PlaylistOrId = Union[models.Playlist, int | str]
+PkTypeTuple = (int, str)
+PkType = int | str
+TrackOrId = models.Track | PkType
+PlaylistTrackOrId = models.PlaylistTrack | PkType
+PlaylistOrId = models.Playlist | PkType
+
+class SwitchPosition(Enum):
+    BEFORE = 0
+    AFTER = 1
 
 
-def _playlist_id(playlist: PlaylistOrId):
-    if isinstance(playlist, (int, str)):
+def _playlist_id(playlist: PlaylistOrId) -> PkType:
+    if isinstance(playlist, PkTypeTuple):
         return playlist
     elif isinstance(playlist, models.Playlist):
-        return cast(int, playlist.pk)
+        return playlist.pk
     else:
         raise ValueError("`playlist` should be either a `int`, `str` or a `Playlist`.")
 
 
-def _track_id(track: TrackOrId):
-    if isinstance(track, (int, str)):
+def _track_id(track: TrackOrId) -> PkType:
+    if isinstance(track, PkTypeTuple):
+        return track
+    elif isinstance(track, models.Track):
+        return track.pk
+    else:
+        raise ValueError(
+            "`track` should be either a `int`, `str` or a `Track`."
+        )
+
+def _playlist_track_id(track: PlaylistTrackOrId) -> PkType:
+    if isinstance(track, PkTypeTuple):
         return track
     elif isinstance(track, models.PlaylistTrack):
-        return cast(int, track.pk)
+        return track.pk
     else:
         raise ValueError(
             "`track` should be either a `int`, `str` or a `PlaylistTrack`."
         )
 
-
-def _track_id_and_track(track: TrackOrId):
-    if isinstance(track, int):
+def _playlist_track_id_and_track(track: PlaylistTrackOrId) -> tuple[PkType, models.PlaylistTrack]:
+    if isinstance(track, PkTypeTuple):
         return track, models.PlaylistTrack.objects.get(track_id=track)
     elif isinstance(track, models.PlaylistTrack):
-        return cast(int, track.pk), track
+        return track.pk, track
     else:
         raise ValueError("`track` should be either a `int` or a `PlaylistTrack`.")
 
 
-def _last_track(playlist: models.Playlist):
+def _last_track(playlist: PkType) -> models.PlaylistTrack | None:
     """Return the last track in the playlist."""
     return models.PlaylistTrack.objects.filter(playlist=playlist, next=None).first()
 
@@ -100,7 +117,7 @@ def add_track_to_playlist(playlist: PlaylistOrId, track_or_id: TrackOrId):
 
     playlist_id = _playlist_id(playlist)
     track_id = _track_id(track_or_id)
-    last_track = _last_track(playlist)
+    last_track = _last_track(playlist_id)
 
     # use atomic transaction to ensure consistency
     with atomic():
@@ -113,21 +130,21 @@ def add_track_to_playlist(playlist: PlaylistOrId, track_or_id: TrackOrId):
         if last_track:
             last_track.next = new_track
             last_track.save()
+    
+    return new_track
 
 
-def remove_track_from_playlist(
-    track_or_id: models.PlaylistTrack | str,
-):
+def remove_track_from_playlist(track_or_id: PlaylistTrackOrId):
     """
     Remove a track from the playlist.
     """
 
-    _, track = _track_id_and_track(track_or_id)
+    _, track = _playlist_track_id_and_track(track_or_id)
 
     # use atomic transaction to ensure consistency
     with atomic():
-        previous_track = cast(Optional[models.PlaylistTrack], track.previous)
-        next_track = cast(Optional[models.PlaylistTrack], track.next)
+        previous_track = cast(models.PlaylistTrack | None, track.previous)
+        next_track = cast(models.PlaylistTrack | None, track.next)
 
         if previous_track:
             previous_track.next = next_track
@@ -140,17 +157,17 @@ def remove_track_from_playlist(
         track.delete()
 
 
-POS_BEFORE = 0
-POS_AFTER = 1
 def switch_tracks_in_playlist(
-    source: models.PlaylistTrack | str, destination: models.PlaylistTrack | str, position: POS_BEFORE | POS_AFTER
+    source: PlaylistTrackOrId,
+    destination: PlaylistTrackOrId,
+    position: SwitchPosition
 ):
     """
     Switch the position of two tracks in the playlist.
     """
 
-    def _pl_track(track_or_id: models.PlaylistTrack | str):
-        return models.PlaylistTrack.objects.prefetch_related("next", "previous").get(pk=_track_id(track_or_id))
+    def _pl_track(track_or_id: PlaylistTrackOrId):
+        return models.PlaylistTrack.objects.prefetch_related("next", "previous").get(pk=_playlist_track_id(track_or_id))
 
     def _opt_track(obj):
         return cast(models.PlaylistTrack | None, obj)
@@ -172,7 +189,7 @@ def switch_tracks_in_playlist(
 
         # insert `source` into relative relative `position` from `destination`
         destination = _pl_track(destination)
-        if position == POS_BEFORE:
+        if position == SwitchPosition.BEFORE:
             source.previous = destination.previous
             source.next = destination
             if dp := destination.previous:

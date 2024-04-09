@@ -69,8 +69,8 @@ class PlaylistTrackViewSet(
         return models.PlaylistTrack.objects.filter(playlist_id=self.playlist_id)
 
     def perform_create(self, serializer: serializers.PlaylistTrackCreateSerializer):
-        track_id = serializer["track"]
-        playlist_service.add_track_to_playlist(self.playlist_id, track_id.value)
+        track_id = serializer["track"].value
+        playlist_service.add_track_to_playlist(self.playlist_id, track_id)
 
         #HACK: clanky wap to add the Location header to the response
         serializer._data[api_settings.URL_FIELD_NAME] = self.reverse_action(
@@ -88,7 +88,8 @@ class PlaylistTrackViewSet(
         from_ = serializer["source"].value
         to_ = serializer["destination"].value
         pos = serializer["position"].value
+        switch_position = playlist_service.SwitchPosition(pos)
 
-        playlist_service.switch_tracks_in_playlist(from_, to_, pos)
+        playlist_service.switch_tracks_in_playlist(from_, to_, switch_position)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
